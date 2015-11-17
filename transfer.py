@@ -12,6 +12,7 @@ course_len = ''
 for student_info in csv_file:
     student_id = student_info[2]
     courses_student = student_info[3:]
+    print student_id
 
     # loops over courses of the student
     for course_student in courses_student:
@@ -31,7 +32,7 @@ for course_info in courses_info:
     course_info[1] = len(course_info) - 1
 
 courses_info = courses_info[5:]
-print courses_info
+# print courses_info
 
 output = open('vakken_roostering.csv', 'wb')
 writer = csv.writer(output)

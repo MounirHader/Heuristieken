@@ -160,8 +160,12 @@ class ScheduleStudent(object):
         """
         return (m, n) in self.time_slots
 
-def makeSchedules():
+def objectMaker():
+    '''
+    Extracts data from original CSV file (studenten_roostering).
 
+    Outputs lists: student_list and course_list, which are lists of objects
+    '''
     import csv
 
     # open csv file and reads into csv-file
@@ -179,7 +183,7 @@ def makeSchedules():
 
         # create new student object and adds it to list
         student = Student(student_id, courses_student)
-        print student.numberCourses()
+        print student.courses
 
         student_list.append(student)
 
@@ -197,3 +201,6 @@ def makeSchedules():
                     students = []
                     course = Course(course_student, students)
                     course_list.append(course)
+
+# run last class
+objectMaker()
