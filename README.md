@@ -1,2 +1,0 @@
-# Heuristieken
-Roosters en schedules
