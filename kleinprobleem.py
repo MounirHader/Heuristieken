@@ -1,31 +1,16 @@
-# leerlingen
-leerling_1 = [wiskunde, natuurkunde]
-leerling_2 = [natuurkunde]
-leerling_3 = [scheikunde, natuurkunde]
-
-# onderwijsvorm
-vorm = [hoorcollege, werkcollege, practicum]
-
-# list is vorm
-vakken = {'wiskunde': [3, 2, 0], 'natuurkunde': [1, 2, 2], 'scheikunde': [1, 2, 4]}
-
-# dingen
-lokalen = {'A': 1, 'B': 2, 'C': 3, 'D': 4}
-tijdslot = [9, 11, 13, 15]
-dagen = [...]
 
 
-class Student
+class Student(object):
     """
     A Student represents a certain student
 
     """
-    def __init__(self, identifier, courses):
+    def __init__(self, student_id, courses):
         """
         Initializes a student with courses
 
         """
-        self.identifier = identifier
+        self.student_id = student_id
         self.courses = courses
 
     def numberCourses(self):
@@ -35,7 +20,7 @@ class Student
         """
         return len(self.courses)
 
-class Course
+class Course(object):
     """
     A Course represents a certain course.
     """
@@ -54,7 +39,7 @@ class Course
         """
         return len(self.students)
 
-class Class
+class Class(object):
     """
     A Class represents a a certain class of a course.
     """
@@ -131,7 +116,7 @@ class ScheduleRoom(object):
         return (m, n) in self.time_slots
 
 
-class ScheduleStudent
+class ScheduleStudent(object):
     """
     A ScheduleStudent represents a Schedule containing filled or empty timeslots
 
@@ -175,8 +160,40 @@ class ScheduleStudent
         """
         return (m, n) in self.time_slots
 
-def startinvullen rooster
+def makeSchedules():
 
-voor iedere student maak een rooster animation
+    import csv
 
-voor ieder ekamere
+    # open csv file and reads into csv-file
+    f = open('studenten_roostering.csv')
+    csv_file = csv.reader(f)
+
+    # empty list for student and course objects
+    student_list = []
+    course_list = []
+
+    # extracts the id and courses of every student
+    for student_info in csv_file:
+        student_id = student_info[2]
+        courses_student = student_info[3:]
+
+        # create new student object and adds it to list
+        student = Student(student_id, courses_student)
+        print student.numberCourses()
+
+        student_list.append(student)
+
+        # loops over courses of the student
+        for course_student in courses_student:
+            course_exists = False
+            # checks if course already exists
+            for course in course_list:
+                if course.name == course_student:
+                    course.students.append(student_id)
+                    course_exists = True
+            if course_exists == False:
+                if course_student != '':
+                    # creates new course object w
+                    students = []
+                    course = Course(course_student, students)
+                    course_list.append(course)
