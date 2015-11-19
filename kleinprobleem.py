@@ -1,5 +1,3 @@
-
-
 class Student(object):
     """
     A Student represents a certain student
@@ -39,15 +37,18 @@ class Course(object):
         """
         return len(self.students)
 
-class Class(object):
+
+class TimeSlot(object):
     """
-    A Class represents a a certain class of a course.
+    A TimeSlot represents a two hour block.
     """
-    def __init__(self, course, class_type, students):
+    def __init__(self, day, hour, course, class_type, students):
         """
-        Initializes a class with class_type and students
+        Initializes a timeslot with day and hour
 
         """
+        self.day = day
+        self.hour = hour
         self.course = course
         self.class_type = class_type
         self.students = students
@@ -58,19 +59,6 @@ class Class(object):
 
         """
         return len(self.students)
-
-
-class TimeSlot(object):
-    """
-    A TimeSlot represents a two hour block.
-    """
-    def __init__(self, day, hour):
-        """
-        Initializes a timeslot with day and hour
-
-        """
-        self.day = day
-        self.hour = hour
 
 
 class ScheduleRoom(object):
@@ -98,22 +86,22 @@ class ScheduleRoom(object):
         Fill time_slot with course
 
         """
-        x = time_slot.day
-        y = time_slot.hour
-        if (x, y) not in self.time_slots:
-            self.time_slots.append((x,y))
+        day = time_slot.day
+        hour = time_slot.hour
+        if (day, hour) not in self.time_slots:
+            self.time_slots.append((day,hour))
 
-    def isTimeSlotFilled(self, m, n):
+    def isTimeSlotFilled(self, day, hour):
         """
-        Return True if the time_slot (m, n) has been filled.
+        Return True if the time_slot (day, hour) has been filled.
 
-        Assumes that (m, n) represents a valid timeslot inside the room.
+        Assumes that (day, hour) represents a valid timeslot inside the room.
 
-        m: an integer
-        n: an integer
-        returns: True if (m, n) is cleaned, False otherwise
+        day: an integer
+        hour: an integer
+        returns: True if (day, hour) is cleaned, False otherwise
         """
-        return (m, n) in self.time_slots
+        return (day, hour) in self.time_slots
 
 
 class ScheduleStudent(object):
@@ -175,15 +163,23 @@ def objectMaker():
     # empty list for student and course objects
     student_list = []
     course_list = []
+    student_infos = []
 
     # extracts the id and courses of every student
-    for student_info in csv_file:
-        student_id = student_info[2]
-        courses_student = student_info[3:]
+    for csv_line in csv_file:
+        student_infos.append(csv_line)
 
+    for student_info in student_infos[1:10]:
+        student_id = student_info[2]
+        courses_student = []
+        for student_course in student_info[3:]:
+            if student_course != "":
+                courses_student.append(student_course)
+
+
+        # [course for course in ["vak1", "vak2", "", ""] if course]
         # create new student object and adds it to list
         student = Student(student_id, courses_student)
-        print student.courses
 
         student_list.append(student)
 
@@ -201,6 +197,12 @@ def objectMaker():
                     students = []
                     course = Course(course_student, students)
                     course_list.append(course)
+                    course.students.append(student_id)
+
+    for course in course_list:
+        print course.name
+        print course.students
+        print course.numberStudents()
 
 # run last class
 objectMaker()
