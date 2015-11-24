@@ -38,73 +38,80 @@ class Course(object):
         return len(self.students)
 
 
+
 class TimeSlot(object):
     """
     A TimeSlot represents a two hour block.
     """
-    def __init__(self, course, class_type, students):
+    def __init__(self, course, students):
         """
         Initializes a timeslot with day and hour
 
         """
         self.course = course
-        self.class_type = class_type
         self.students = students
+        self.day = ''
+        self.hour = ''
 
-    def numberStudents(self):
+    def randomnDayHour(self):
         """
-        returns number of students
+        Assigns randomn day and hour to timeslot
 
         """
-        return len(self.students)
+        self.day = random.randint(0, 4)
+        self.hour = random.randint(0,3)
+
+    def isRoomEmpty(self, schedule_room):
+        """
+        returns true if timeslot is empty for room
+
+        """
+        for time_slot in schedule_room.time_slots:
+            if self.day != time_slot.day or self.hour != time_slot.hour:
+                return True
+
+    def isStudentEmpty(self, schedule_student):
+        """
+        returns if timeslot is empty for student
+
+        """
+
+        for time_slot in schedule_student.time_slots:
+            if self.day != time_slot.day or self.hour != time_slot.hour:
+                return True
+
+
+
+    def fillTimeSlot(self, schedule_room, schedule_student):
+        """
+        Fill timeslot to schedule_room and schedule_student
+
+        """
+        schedule_room.time_slots.append(self)
+        schedule_student.time_slots.append(self)
+
 
 
 class ScheduleRoom(object):
     """
-    A ScheduleRoom represents a Schedule containing filled or empty timeslots
+    A ScheduleRoom represents a Schedule containing filled timeslots
 
     """
     def __init__(class_room):
         """
         Initializes a ScheduleRoom with a specified class_room
 
-        A schedule has always days of 4 and hours of 3
-
         Initially, no timeslots are filled with courses
 
         """
 
         self.class_room = class_room
-        self.days = 4
-        self.hours = 3
         self.time_slots = []
-
-    def fillTimeSlot(self, time_slot, course):
-        """
-        Fill time_slot with course
-
-        """
-        day = time_slot.day
-        hour = time_slot.hour
-        if (day, hour) not in self.time_slots:
-            self.time_slots.append((day,hour))
-
-    def isTimeSlotFilled(self, day, hour):
-        """
-        Return True if the time_slot (day, hour) has been filled.
-
-        Assumes that (day, hour) represents a valid timeslot inside the room.
-
-        day: an integer
-        hour: an integer
-        returns: True if (day, hour) is cleaned, False otherwise
-        """
-        return (day, hour) in self.time_slots
 
 
 class ScheduleStudent(object):
     """
-    A ScheduleStudent represents a Schedule containing filled or empty timeslots
+    A ScheduleStudent represents a Schedule containing filled timeslots
 
     """
 
@@ -112,39 +119,13 @@ class ScheduleStudent(object):
         """
         Initializes a ScheduleStudent with a specified student
 
-        A schedule has always days of 4 and hours of 3
-
         Initially, no timeslots are filled with courses
 
         """
 
         self.class_room = student
-        self.days = 4
-        self.hours = 3
         self.time_slots = []
 
-
-    def fillTimeSlot(self, time_slot, course):
-        """
-        Fill time_slot with course
-
-        """
-        x = time_slot.day
-        y = time_slot.hour
-        if (x, y) not in self.time_slots:
-            self.time_slots.append((x,y))
-
-    def isTimeSlotFilled(self, x, y):
-        """
-        Return True if the time_slot (m, n) has been filled.
-
-        Assumes that (m, n) represents a valid timeslot inside the room.
-
-        m: an integer
-        n: an integer
-        returns: True if (m, n) is cleaned, False otherwise
-        """
-        return (x, y) in self.time_slots
 
 def objectMaker():
     '''
@@ -153,6 +134,7 @@ def objectMaker():
     Outputs lists: student_list and course_list, which are lists of objects
     '''
     import csv
+    import random
 
     # open csv file and reads into csv-file
     f = open('studenten_roostering.csv')
@@ -197,10 +179,11 @@ def objectMaker():
                     course_list.append(course)
                     course.students.append(student_id)
 
-    for course in course_list:
-        print course.name
-        print course.students
-        print course.numberStudents()
+    # creates one schedule_room object
+    schedule_room = ScheduleRoom("A5")
+
+    # creates 
+
 
 
 # run last class
