@@ -67,36 +67,27 @@ class TimeSlot(object):
         returns true if timeslot is empty for room
 
         """
-        if schedule_room.time_slots != []:
-            print len(schedule_room.time_slots)
+        room_empty = True
 
+        if schedule_room.time_slots != []:
             for time_slot in schedule_room.time_slots:
-                print self.day
-                print self.hour
-                print time_slot.day
-                print time_slot.hour
                 if self.day == time_slot.day and self.hour == time_slot.hour:
-                    print "False"
-                    return False
-                else:
-                    return True
-        else:
-            return True
+                    room_empty = False
+        return room_empty
+
 
     def isStudentEmpty(self, schedule_student):
         """
         returns true if timeslot is empty for student
 
         """
+        student_empty = True
+
         if schedule_student.time_slots != []:
             for time_slot in schedule_student.time_slots:
                 if self.day == time_slot.day and self.hour == time_slot.hour:
-                    return False
-                else:
-                    return True
-        else:
-            return True
-
+                    student_empty = False
+        return student_empty
 
 
     def fillTimeSlot(self, schedule_room, schedule_students_timeslot):
