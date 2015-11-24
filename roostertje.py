@@ -33,7 +33,7 @@ while not gameExit:
     pygame.draw.line(gameDisplay, red, (0,100), (1200,100), 3)
 
 
-    pygame.draw.rect(gameDisplay, black, (50,110,100,100), 2)
+    pygame.draw.rect(gameDisplay, black, (0,100,display_x/7,120), 2)
 
     i = 0
     while i < display_x:
