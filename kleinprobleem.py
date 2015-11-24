@@ -48,17 +48,18 @@ class TimeSlot(object):
         Initializes a timeslot with day and hour
 
         """
-        self.course = course
+        self.name = course.name
         self.students = course.students
         self.day = ''
         self.hour = ''
 
-    def randomnDayHour(self):
+    def randomDayHour(self):
         """
         Assigns randomn day and hour to timeslot
 
         """
-        self.day = random.randint(0, 4)
+        import random
+        self.day = random.randint(0,4)
         self.hour = random.randint(0,3)
 
     def isRoomEmpty(self, schedule_room):
@@ -66,23 +67,35 @@ class TimeSlot(object):
         returns true if timeslot is empty for room
 
         """
-        for time_slot in schedule_room.time_slots:
-            if self.day != time_slot.day or self.hour != time_slot.hour:
-                return True
-            else:
-                return False
+        if schedule_room.time_slots != []:
+            print len(schedule_room.time_slots)
+
+            for time_slot in schedule_room.time_slots:
+                print self.day
+                print self.hour
+                print time_slot.day
+                print time_slot.hour
+                if self.day == time_slot.day and self.hour == time_slot.hour:
+                    print "False"
+                    return False
+                else:
+                    return True
+        else:
+            return True
 
     def isStudentEmpty(self, schedule_student):
         """
         returns true if timeslot is empty for student
 
         """
-
-        for time_slot in schedule_student.time_slots:
-            if self.day != time_slot.day or self.hour != time_slot.hour:
-                return True
-            else:
-                return False
+        if schedule_student.time_slots != []:
+            for time_slot in schedule_student.time_slots:
+                if self.day == time_slot.day and self.hour == time_slot.hour:
+                    return False
+                else:
+                    return True
+        else:
+            return True
 
 
 
@@ -103,7 +116,7 @@ class ScheduleRoom(object):
     A ScheduleRoom represents a Schedule containing filled timeslots
 
     """
-    def __init__(class_room):
+    def __init__(self, class_room):
         """
         Initializes a ScheduleRoom with a specified class_room
 
@@ -121,7 +134,7 @@ class ScheduleStudent(object):
 
     """
 
-    def __init__(student):
+    def __init__(self, student_id):
         """
         Initializes a ScheduleStudent with a specified student
 
@@ -129,7 +142,7 @@ class ScheduleStudent(object):
 
         """
 
-        self.class_room = student
+        self.student_id = student_id
         self.time_slots = []
 
 
@@ -186,7 +199,7 @@ def objectMaker():
                     course.students.append(student_id)
 
     # creates one schedule_room object
-    schedule_room = ScheduleRoom("A5")
+    schedule_room = ScheduleRoom('A5')
 
     # creates the schedule_student objects
     schedule_student_list = []
@@ -195,33 +208,54 @@ def objectMaker():
         schedule_student_list.append(schedule_student)
 
     # creates timeslot object for every course
+    time_slot_list = []
+
+    print_list = []
+
     for course in course_list:
         time_slot = TimeSlot(course)
 
-        # make list of schedule_student objects of this time_slot
+        # make list of schedule_student objects one for every student in this time_slot
         schedule_students_timeslot = []
         for student in time_slot.students:
-            
+            for schedule_student in schedule_student_list:
+                if student == schedule_student.student_id:
+                     schedule_students_timeslot.append(schedule_student)
+
 
         # assign random hour and day to time_slot
         time_slot.randomDayHour()
 
-        # check if room is filled at timeslot
-        room_empty = time_slot.isRoomEmpty(schedule_room)
+        while(True):
 
-        # checks if student are filled at timeslot
-        for schedule_student in schedule_student_list:
-            student_empty = time_slot.isStudentEmpty(schedule_student)
+            # check if room is filled at timeslot
+            room_empty = time_slot.isRoomEmpty(schedule_room)
 
-            # if student_empty is false break out of for loop
-            if student_empty == False:
+            # checks if student are filled at timeslot
+            for schedule_student in schedule_students_timeslot:
+                student_empty = time_slot.isStudentEmpty(schedule_student)
+
+                # if student_empty is false break out of for loop
+                if student_empty == False:
+                    break
+
+            # checks if room_empty and student_empty are both true
+            if room_empty == True and student_empty == True:
+                #  fill schedule_room and schedule_stude
+                time_slot.fillTimeSlot(schedule_room, schedule_students_timeslot)
+                # break out of while loop
                 break
+            # else assign random day and hour to time_slot and check again
+            else:
+                time_slot.randomDayHour()
 
-        # checks if room_empty and student_empty are both true
-        if room_empty and student_empty:
+        # appends time_slot to time_slot_list
+        time_slot_list.append(time_slot)
 
-            #  fill schedule_room and schedule_stude
-
+        # test
+        test = [time_slot.name[:2],time_slot.day, time_slot.hour]
+        print_list.append(test)
+        print print_list
 
 
 
