@@ -32,15 +32,13 @@ while not gameExit:
     # header line
     pygame.draw.line(gameDisplay, red, (0,100), (1200,100), 3)
 
+
+    pygame.draw.rect(gameDisplay, black, (50,110,100,100), 2)
+
     i = 0
     while i < display_x:
-
         # horizonal lines
         pygame.draw.line(gameDisplay, black, (0,220), (1200,220), 1)
-        pygame.draw.line(gameDisplay, black, (0,250), (1200,250), 1)
-        pygame.draw.line(gameDisplay, black, (0,280), (1200,280), 1)
-        pygame.draw.line(gameDisplay, black, (0,310), (1200,310), 1)
-        
         pygame.draw.line(gameDisplay, black, (0,340), (1200,340), 1)
         pygame.draw.line(gameDisplay, black, (0,460), (1200,460), 1)
         pygame.draw.line(gameDisplay, black, (0,580), (1200,580), 1)
