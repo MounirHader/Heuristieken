@@ -8,8 +8,8 @@ white = (255,255,255)
 gekkigheid = (255, 240, 240)
 grey = (158,158,158)
 
-display_x = 1200
-display_y = 700
+display_x = 500
+display_y = 500
 
 gameDisplay = pygame.display.set_mode((display_x, display_y))
 pygame.display.set_caption('Gimmah')
@@ -20,10 +20,6 @@ while not gameExit:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameExit = True
-        # if ...
-        #     do this
-        # if ...
-        #     do that
 
     gameDisplay.fill(gekkigheid)
     # pygame.draw.rect(gameDisplay, black, [400,300,10,10])
@@ -32,8 +28,8 @@ while not gameExit:
     # header line
     pygame.draw.line(gameDisplay, red, (0,100), (1200,100), 3)
 
-
-    pygame.draw.rect(gameDisplay, black, (0,100,display_x/7,120), 2)
+    # rectangle op (0,0)
+    pygame.draw.rect(gameDisplay, red, (0,100,display_x/7,120), 4)
 
     i = 0
     while i < display_x:
@@ -48,21 +44,8 @@ while not gameExit:
         i += display_x/7
         if i > 1150:
             break
-        #
-        # pygame.draw.line(gameDisplay, black, (0,0), (0,900), 1)
-        # pygame.draw.line(gameDisplay, black, (240,0), (240,900), 1)
-        # pygame.draw.line(gameDisplay, black, (480,0), (480,900), 1)
-        # pygame.draw.line(gameDisplay, black, (720,0), (720,900), 1)
-        # pygame.draw.line(gameDisplay, black, (960,0), (960,900),    1)
 
 	pygame.display.set_caption('Basic Pygame program')
-
-	# font = pygame.font.Font(None, 36)
-	# text = font.render("Hello There", 1, (10, 10, 10))
-	# textpos = text.get_rect()
-	# textpos.centerx = pygame.Surface(screen.get_rect().centerx
-	# pygame.Surface(screen.get_size().blit(text, textpos)
-
     pygame.display.update()
 
 pygame.quit()

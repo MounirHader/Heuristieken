@@ -117,6 +117,7 @@ class ScheduleRoom(object):
 
         self.class_room = class_room
         self.time_slots = []
+        self.type = "room"
 
 
 class ScheduleStudent(object):
@@ -135,6 +136,7 @@ class ScheduleStudent(object):
 
         self.student_id = student_id
         self.time_slots = []
+        self.type = "student"
 
 
 def scheduleMaker():
@@ -243,9 +245,9 @@ def scheduleMaker():
         # appends time_slot to time_slot_list
         time_slot_list.append(time_slot)
 
-        # test
-        test = [time_slot.name[:2],time_slot.day, time_slot.hour]
-        print_list.append(test)
-        print print_list
+        # # test
+        # test = [time_slot.name[:2],time_slot.day, time_slot.hour]
+        # print_list.append(test)
+        # print print_list
 
     return [schedule_room, schedule_student_list]
