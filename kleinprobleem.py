@@ -42,13 +42,11 @@ class TimeSlot(object):
     """
     A TimeSlot represents a two hour block.
     """
-    def __init__(self, day, hour, course, class_type, students):
+    def __init__(self, course, class_type, students):
         """
         Initializes a timeslot with day and hour
 
         """
-        self.day = day
-        self.hour = hour
         self.course = course
         self.class_type = class_type
         self.students = students
@@ -136,7 +134,7 @@ class ScheduleStudent(object):
         if (x, y) not in self.time_slots:
             self.time_slots.append((x,y))
 
-    def isTimeSlotFilled(self, m, n):
+    def isTimeSlotFilled(self, x, y):
         """
         Return True if the time_slot (m, n) has been filled.
 
@@ -146,7 +144,7 @@ class ScheduleStudent(object):
         n: an integer
         returns: True if (m, n) is cleaned, False otherwise
         """
-        return (m, n) in self.time_slots
+        return (x, y) in self.time_slots
 
 def objectMaker():
     '''
@@ -203,6 +201,7 @@ def objectMaker():
         print course.name
         print course.students
         print course.numberStudents()
+
 
 # run last class
 objectMaker()
