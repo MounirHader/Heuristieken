@@ -64,14 +64,6 @@ def visualize(schedule):
         gameDisplay.fill(gekkigheid)
         screen = gameDisplay.fill(grey, rect=[857,100,350,600])
 
-        # initialize 5x5 grid
-        for i in range(5):
-            # horizontal lines
-            pygame.draw.line(gameDisplay, black, (0,i*100), (500, i*100))
-
-            # vertical lines
-            pygame.draw.line(gameDisplay, black, (i * 100,0), (i * 100 ,500))
-
         # put time_slot in visualization
         for time_slot in schedule.time_slots:
             pygame.draw.rect(gameDisplay, (202, 222, 218), [time_slot.day * 100 , time_slot.hour * 100 ,100,100])
@@ -81,7 +73,15 @@ def visualize(schedule):
 
             # render text
             label = myfont.render(time_slot.name[:3], 3, (0,0,0))
-            gameDisplay.blit(label, (time_slot.day * 100 +20 , time_slot.hour * 100 + 40))
+            gameDisplay.blit(label, (time_slot.day * 100 +30 , time_slot.hour * 100 + 40))
+
+        # initialize 5x5 grid
+        for i in range(5):
+            # horizontal lines
+            pygame.draw.line(gameDisplay, black, (0,i*100), (500, i*100))
+
+            # vertical lines
+            pygame.draw.line(gameDisplay, black, (i * 100,0), (i * 100 ,500))
 
         # put correct caption
         if schedule.type == "room":
