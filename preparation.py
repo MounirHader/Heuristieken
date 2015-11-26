@@ -29,6 +29,7 @@ class Course(object):
         """
         self.name = name
         self.students = students
+        self.sessions =
 
     def numberStudents(self):
         """
@@ -94,7 +95,7 @@ def main():
     for csv_line in csv_file_1:
         student_infos.append(csv_line)
 
-    for student_info in student_infos[1:]:
+    for student_info in student_infos[1:10]:
         student_id = student_info[2]
         courses_student = []
         for student_course in student_info[3:]:
@@ -190,5 +191,3 @@ def main():
 
     # returns list of student objects and list of course objects
     return [student_list, course_list, session_list, room_list]
-
-main()

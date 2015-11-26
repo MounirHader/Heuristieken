@@ -143,6 +143,7 @@ def main():
     student_list = lists[0]
     course_list = lists[1]
 
+
     # creates one schedule_room object
     schedule_room = ScheduleRoom('A5')
 
@@ -202,6 +203,8 @@ def main():
         print_list.append(test)
         # print print_list
 
+    print schedule_room.giveList()
+
     return [schedule_room, schedule_student_list]
 
-# main()
+main()
