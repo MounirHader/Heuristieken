@@ -80,6 +80,22 @@ class ScheduleRoom(object):
         self.time_slots = []
         self.type = "room"
 
+    def giveList(self):
+        """
+        returns list of day and hours for schedule
+
+        """
+        schedule_list = []
+        for time_slot in self.time_slots:
+            day_hour = []
+            day_hour.append(time_slot.day)
+            day_hour.append(time_slot.hour)
+            schedule_list.append(day_hour)
+
+        return schedule_list
+
+
+
 
 class ScheduleStudent(object):
     """
@@ -98,6 +114,20 @@ class ScheduleStudent(object):
         self.student_id = student_id
         self.time_slots = []
         self.type = "student"
+
+    def giveList(self):
+        """
+        returns list of day and hours for schedule
+
+        """
+        schedule_list = []
+        for time_slot in self.time_slots:
+            day_hour = []
+            day_hour.append(time_slot.day)
+            day_hour.append(time_slot.hour)
+            schedule_list.append(day_hour)
+
+        return schedule_list
 
 def main():
     '''
