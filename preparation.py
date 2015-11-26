@@ -37,6 +37,27 @@ class Course(object):
         """
         return len(self.students)
 
+class Session(object):
+    """
+    A Session represents a certain session of a course.
+    """
+    def __init__(self, session_type, course, students):
+        """
+        Initializes a session with students
+
+        """
+        self.session_type = session_type
+        self.course = course
+        self.students = students
+
+    def numberStudents(self):
+        """
+        returns number of students
+
+        """
+        return len(self.students)
+
+
 
 def main():
     '''
@@ -47,20 +68,23 @@ def main():
     import csv
     import random
 
-    # open csv file and reads into csv-file
-    f = open('studenten_roostering.csv')
-    csv_file = csv.reader(f)
+    # open csv files and reads into csv-file
+    f1 = open('studenten_roostering.csv')
+    csv_file_1 = csv.reader(f1)
+    f2 = open('vak_specificaties.csv')
+    csv_file_2 = csv.reader(f2, delimiter=';')
 
     # empty list for student and course objects
     student_list = []
     course_list = []
     student_infos = []
+    course_specifications = []
 
     # extracts the id and courses of every student
-    for csv_line in csv_file:
+    for csv_line in csv_file_1:
         student_infos.append(csv_line)
 
-    for student_info in student_infos[1:10]:
+    for student_info in student_infos[1:]:
         student_id = student_info[2]
         courses_student = []
         for student_course in student_info[3:]:
@@ -68,7 +92,6 @@ def main():
                 courses_student.append(student_course)
 
 
-        # [course for course in ["vak1", "vak2", "", ""] if course]
         # create new student object and adds it to list
         student = Student(student_id, courses_student)
 
@@ -90,5 +113,64 @@ def main():
                     course_list.append(course)
                     course.students.append(student_id)
 
+    # extracts the specifications of every course
+    for csv_line in csv_file_2:
+        course_specifications.append(csv_line)
+
+    session_list = []
+
+    # creates different session objects for every course object
+    for course in course_list:
+        course_sessions = []
+        num_students = course.numberStudents()
+        for course_specification in course_specifications:
+            if course.name == course_specification[0]:
+                # creates lectures
+                num_lectures = int(course_specification[1])
+                for i in range(num_lectures):
+                    session_type = "lecture"
+                    new_lecture = Session(session_type, course.name, course.students)
+                    course_sessions.append(new_lecture)
+                    session_list.append(new_lecture)
+
+                # creates tutorials
+                if course_specification[2] != "0":
+                    num_students_tutorial = int(course_specification[3])
+                    num_tutorials = int((float(num_students) / float(num_students_tutorial)) + 1)
+                    rest = course.students
+                    for i in range(num_tutorials):
+                        students_tutorial = rest[:num_students_tutorial]
+
+                        rest = rest[num_students_tutorial:]
+                        session_type = "tutorial"
+                        new_tutorial = Session(session_type, course.name, students_tutorial)
+                        course_sessions.append(new_tutorial)
+                        session_list.append(new_tutorial)
+
+                # creates practica
+                if course_specification[4] != "0":
+                    num_students_practicum = int(course_specification[5])
+                    num_practicum = int((float(num_students) / float(num_students_practicum)) + 1)
+                    rest = course.students
+                    for i in range(num_practicum):
+                        students_practicum = rest[:num_students_practicum]
+                        rest = rest[num_students_practicum:]
+                        session_type = "practicum"
+                        new_practicum = Session(session_type, course.name, students_practicum)
+                        course_sessions.append(new_practicum)
+                        session_list.append(new_practicum)
+
+    print len(session_list)
+    # for session in session_list:
+    #     print session.session_type
+    #     print session.course
+    #     print session.students
+
+
+
+
+
     # returns list of student objects and list of course objects
     return [student_list, course_list]
+
+main()
