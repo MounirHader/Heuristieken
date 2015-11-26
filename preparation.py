@@ -57,6 +57,17 @@ class Session(object):
         """
         return len(self.students)
 
+class Room(object):
+    """
+    A Room represents a certain room.
+    """
+    def __init__(self, name, capacity):
+        """
+        Initializes a session with students
+
+        """
+        self.name= name
+        self.capacity = capacity
 
 
 def main():
@@ -78,7 +89,6 @@ def main():
     student_list = []
     course_list = []
     student_infos = []
-    course_specifications = []
 
     # extracts the id and courses of every student
     for csv_line in csv_file_1:
@@ -114,6 +124,7 @@ def main():
                     course.students.append(student_id)
 
     # extracts the specifications of every course
+    course_specifications = []
     for csv_line in csv_file_2:
         course_specifications.append(csv_line)
 
@@ -160,17 +171,18 @@ def main():
                         course_sessions.append(new_practicum)
                         session_list.append(new_practicum)
 
-    print len(session_list)
-    # for session in session_list:
-    #     print session.session_type
-    #     print session.course
-    #     print session.students
+    # extracts the specifications of every room
+    room_specifications = [["A1.04",41], ["A1.06",22], ["A1.08",20,], ["A1.10",56], ["B0.201",48], ["C0.110",117], ["C1.112",60]]
 
-
-
-
+    # creates room objects
+    room_list = []
+    for room_specification in room_specifications:
+        new_room = Room(room_specification[0], room_specification[1])
+        print new_room.name
+        print new_room.capacity
+        room_list.append(new_room)
 
     # returns list of student objects and list of course objects
-    return [student_list, course_list]
+    return [student_list, course_list, session_list, room_list]
 
 main()
