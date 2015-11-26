@@ -21,7 +21,7 @@ class TimeSlot(object):
         """
         import random
         self.day = random.randint(0,4)
-        self.hour = random.randint(0,4)
+        self.hour = random.randint(0,3)
 
     def isRoomEmpty(self, schedule_room):
         """
