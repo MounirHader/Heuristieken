@@ -170,7 +170,7 @@ def main():
         # test
         test = [time_slot.name[:2],time_slot.day, time_slot.hour]
         print_list.append(test)
-        print print_list
+        # print print_list
 
     return [schedule_room, schedule_student_list]
 

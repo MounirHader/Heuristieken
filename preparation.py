@@ -171,8 +171,19 @@ def main():
                         course_sessions.append(new_practicum)
                         session_list.append(new_practicum)
 
+<<<<<<< HEAD
     # extracts the specifications of every room
     room_specifications = [["A1.04",41], ["A1.06",22], ["A1.08",20,], ["A1.10",56], ["B0.201",48], ["C0.110",117], ["C1.112",60]]
+=======
+    # print len(session_list)
+    # for session in session_list:
+    #     session.session_type
+    #     print session.course
+    #     print session.students
+
+
+
+>>>>>>> origin/master
 
     # creates room objects
     room_list = []
