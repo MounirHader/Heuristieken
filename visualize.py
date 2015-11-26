@@ -74,6 +74,10 @@ schedule = schedule_maker.main()
 schedule_room = schedule[0]
 schedule_student_list = schedule[1]
 
+for time_slots in schedule_room.time_slots:
+    print time_slots.day
+
+
 # visualize room schedule
 visualize(schedule_room)
 
