@@ -160,9 +160,9 @@ def main():
                         course_sessions.append(new_practicum)
                         session_list.append(new_practicum)
 
-    print len(session_list)
+    # print len(session_list)
     # for session in session_list:
-    #     print session.session_type
+    #     session.session_type
     #     print session.course
     #     print session.students
 
