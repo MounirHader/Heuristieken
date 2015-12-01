@@ -1,8 +1,8 @@
-import kleinprobleem
+import schedule_maker
 
-schedule = kleinprobleem.scheduleMaker()
+schedule = schedule_maker.main()
 
-schedule_room = schedule[0]
+schedule_room_list = schedule[0]
 schedule_student_list = schedule[1]
 
 
@@ -22,7 +22,7 @@ for schedule_student in schedule_student_list:
     print "Timeslots van: " + schedule_student.student_id
     for time_slot in schedule_student.time_slots:
         print "course: "
-        print time_slot.name
+        print time_slot.course
         print "students: "
         print time_slot.students
         print "day: "
@@ -85,8 +85,17 @@ for schedule_student in schedule_student_list:
         score -= 20
     if number_of_days == len(spread_days) - 3:
         score -= 30
+
+    # subtract points for student schedule conflicts
+    timeslot_list = schedule_student.giveList()
+    for timeslot in timeslot_list:
+        if (timeslot_list.count(timeslot) != 1):
+            conflict_aftrek = timeslot_list.count(timeslot) - 1
+            print conflict_aftrek
+            score -= conflict_aftrek
+
 print score
-#     # overschreiding van zaalcapaciteit
+#     # overschrijding van zaalcapaciteit
 #     if studenten_ingedeeld_in_zaal > zaalcapaciteit:
 #         overeschreiding = studenten_ingedeeld_in_zaal - zaalcapaciteit:
 #         score = score - overeschreiding
