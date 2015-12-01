@@ -29,7 +29,7 @@ class Course(object):
         """
         self.name = name
         self.students = students
-        self.sessions =
+        # self.sessions =
 
     def numberStudents(self):
         """
@@ -142,6 +142,7 @@ def main():
                 for i in range(num_lectures):
                     session_type = "lecture"
                     new_lecture = Session(session_type, course.name, course.students)
+                    print new_lecture.course
                     course_sessions.append(new_lecture)
                     session_list.append(new_lecture)
 
@@ -159,7 +160,7 @@ def main():
                         course_sessions.append(new_tutorial)
                         session_list.append(new_tutorial)
 
-                # creates practica 
+                # creates practica
                 if course_specification[4] != "0":
                     num_students_practicum = int(course_specification[5])
                     num_practicum = int((float(num_students) / float(num_students_practicum)) + 1)
@@ -191,3 +192,5 @@ def main():
 
     # returns list of student objects and list of course objects
     return [student_list, course_list, session_list, room_list]
+
+main()
