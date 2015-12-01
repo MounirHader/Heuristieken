@@ -159,7 +159,7 @@ def main():
                         course_sessions.append(new_tutorial)
                         session_list.append(new_tutorial)
 
-                # creates practica
+                # creates practica 
                 if course_specification[4] != "0":
                     num_students_practicum = int(course_specification[5])
                     num_practicum = int((float(num_students) / float(num_students_practicum)) + 1)
