@@ -69,7 +69,7 @@ class ScheduleRoom(object):
     A ScheduleRoom represents a Schedule containing filled timeslots
 
     """
-    def __init__(self, class_room):
+    def __init__(self, room):
         """
         Initializes a ScheduleRoom with a specified class_room
 
@@ -77,9 +77,10 @@ class ScheduleRoom(object):
 
         """
 
-        self.class_room = class_room
+        self.class_room = room.name
         self.time_slots = []
         self.type = "room"
+        self.capacity = room.capacity
 
     def giveList(self):
         """
@@ -150,7 +151,7 @@ def main():
     # creates one schedule_room object
     schedule_room_list = []
     for room in room_list:
-        schedule_room = ScheduleRoom(room.name)
+        schedule_room = ScheduleRoom(room)
         schedule_room_list.append(schedule_room)
 
     # creates the schedule_student objects
@@ -196,7 +197,8 @@ def main():
                     break
 
             # checks if room_empty and student_empty are both true
-            if room_empty == True and student_empty == True:
+            # if room_empty == True and student_empty == True:
+            if room_empty == True:
                 #  fill schedule_room and schedule_stude
                 time_slot.fillTimeSlot(schedule_room, schedule_students_timeslot)
                 # break out of while loop
