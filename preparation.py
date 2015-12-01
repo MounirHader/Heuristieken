@@ -95,7 +95,7 @@ def main():
     for csv_line in csv_file_1:
         student_infos.append(csv_line)
 
-    for student_info in student_infos[1:10]:
+    for student_info in student_infos[1:600]:
         student_id = student_info[2]
         courses_student = []
         for student_course in student_info[3:]:
@@ -142,7 +142,7 @@ def main():
                 for i in range(num_lectures):
                     session_type = "lecture"
                     new_lecture = Session(session_type, course.name, course.students)
-                    print new_lecture.course
+                    # print new_lecture.course
                     course_sessions.append(new_lecture)
                     session_list.append(new_lecture)
 
@@ -186,8 +186,8 @@ def main():
     room_list = []
     for room_specification in room_specifications:
         new_room = Room(room_specification[0], room_specification[1])
-        print new_room.name
-        print new_room.capacity
+        # print new_room.name
+        # print new_room.capacity
         room_list.append(new_room)
 
     # returns list of student objects and list of course objects

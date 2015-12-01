@@ -30,8 +30,11 @@ def visualize(schedule):
             myfont = pygame.font.SysFont("helvetica", 18)
 
             # render text
-            label = myfont.render(time_slot.name[:6], 3, text_color)
+            label = myfont.render(time_slot.course[:6], 3, text_color)
             gameDisplay.blit(label, (time_slot.day * 100 + 75 + 20, time_slot.hour * 100 + 30 + 40))
+
+            label2 = myfont.render(time_slot.type[:6], 3, text_color)
+            gameDisplay.blit(label2, (time_slot.day * 100 + 75 + 20, time_slot.hour * 100 + 30 + 70))
 
         # headers font
         headerfont = pygame.font.SysFont("helvetica", 15)
@@ -71,15 +74,18 @@ def visualize(schedule):
 # run main function in schedule_maker
 schedule = schedule_maker.main()
 
-schedule_room = schedule[0]
+schedule_room_list = schedule[0]
 schedule_student_list = schedule[1]
 
-for time_slots in schedule_room.time_slots:
-    print time_slots.day
+
+for schedule_room in schedule_room_list:
+    for time_slots in schedule_room.time_slots:
+        print time_slots.day
 
 
 # visualize room schedule
-visualize(schedule_room)
+for schedule_room in schedule_room_list:
+    visualize(schedule_room)
 
 # visualize students schedules
 # for schedule_student in schedule_student_list:

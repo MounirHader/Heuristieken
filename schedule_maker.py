@@ -4,13 +4,14 @@ class TimeSlot(object):
     """
     A TimeSlot represents a two hour block.
     """
-    def __init__(self, course):
+    def __init__(self, session):
         """
         Initializes a timeslot with day and hour
 
         """
-        self.name = course.name
-        self.students = course.students
+        self.type = session.session_type
+        self.course = session.course
+        self.students = session.students
         self.day = ''
         self.hour = ''
 
@@ -142,10 +143,15 @@ def main():
     lists = preparation.main()
     student_list = lists[0]
     course_list = lists[1]
+    session_list = lists[2]
+    room_list = lists[3]
 
 
     # creates one schedule_room object
-    schedule_room = ScheduleRoom('A5')
+    schedule_room_list = []
+    for room in room_list:
+        schedule_room = ScheduleRoom(room.name)
+        schedule_room_list.append(schedule_room)
 
     # creates the schedule_student objects
     schedule_student_list = []
@@ -153,13 +159,13 @@ def main():
         schedule_student = ScheduleStudent(student.student_id)
         schedule_student_list.append(schedule_student)
 
-    # creates timeslot object for every course
+    # creates timeslot object for every session
     time_slot_list = []
-
     print_list = []
 
-    for course in course_list:
-        time_slot = TimeSlot(course)
+
+    for session in session_list:
+        time_slot = TimeSlot(session)
 
         # make list of schedule_student objects one for every student in this time_slot
         schedule_students_timeslot = []
@@ -171,6 +177,10 @@ def main():
 
         # assign random hour and day to time_slot
         time_slot.randomDayHour()
+
+        import random
+        schedule_room = random.choice(schedule_room_list)
+
 
         while(True):
 
@@ -194,17 +204,19 @@ def main():
             # else assign random day and hour to time_slot and check again
             else:
                 time_slot.randomDayHour()
+                schedule_room = random.choice(schedule_room_list)
+
 
         # appends time_slot to time_slot_list
         time_slot_list.append(time_slot)
 
         # test
-        test = [time_slot.name[:2],time_slot.day, time_slot.hour]
+        test = [time_slot.course[:2],time_slot.day, time_slot.hour]
         print_list.append(test)
-        # print print_list
+        print print_list
 
-    print schedule_room.giveList()
+    # print schedule_room.giveList()
 
-    return [schedule_room, schedule_student_list]
+    return [schedule_room_list, schedule_student_list]
 
 main()
