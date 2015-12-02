@@ -131,22 +131,12 @@ class ScheduleStudent(object):
 
         return schedule_list
 
-def main():
+def main(student_list, course_list, session_list, room_list):
     '''
     Creates a schedule for room and students.
 
     Outputs: schedule_room object and schedule_student_list which is a list of objects
     '''
-
-    import preparation
-
-    # creates a list of student and course objects in preparation file
-    lists = preparation.main()
-    student_list = lists[0]
-    course_list = lists[1]
-    session_list = lists[2]
-    room_list = lists[3]
-
 
     # creates one schedule_room object
     schedule_room_list = []
@@ -215,10 +205,8 @@ def main():
         # test
         test = [time_slot.course[:2],time_slot.day, time_slot.hour]
         print_list.append(test)
-        print print_list
+        # print print_list
 
     # print schedule_room.giveList()
 
-    return [schedule_room_list, schedule_student_list]
-
-main()
+    return [schedule_room_list, schedule_student_list, course_list]
