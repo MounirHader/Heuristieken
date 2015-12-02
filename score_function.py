@@ -94,6 +94,16 @@ for schedule_student in schedule_student_list:
             print conflict_aftrek
             score -= conflict_aftrek
 
+# subtract points for overcapacity in room
+for schedule_room in schedule_room_list:
+    capacity = schedule_room.capacity
+    for time_slot in schedule_room.time_slots:
+        if len(time_slot.students) > capacity:
+            malus_room = len(time_slot.students) - capacity
+            score -= malus_room
+            print "full"
+            print malus_room
+
 print score
 #     # overschrijding van zaalcapaciteit
 #     if studenten_ingedeeld_in_zaal > zaalcapaciteit:

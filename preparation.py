@@ -95,7 +95,7 @@ def main():
     for csv_line in csv_file_1:
         student_infos.append(csv_line)
 
-    for student_info in student_infos[1:]:
+    for student_info in student_infos[1:40]:
         student_id = student_info[2]
         courses_student = []
         for student_course in student_info[3:]:
