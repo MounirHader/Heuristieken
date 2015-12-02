@@ -10,10 +10,10 @@ course_list = lists[1]
 session_list = lists[2]
 room_list = lists[3]
 
-for i in range(100):
-    schedule = schedule_maker.main(student_list, course_list, session_list, room_list)
-    print i
+# for i in range(100):
+#     schedule = schedule_maker.main(student_list, course_list, session_list, room_list)
+#     print i
 
-# for i in range (100):
-#     score = score_function.main()
-#     print score
+for i in range (100):
+    score = score_function.main()
+    print score
