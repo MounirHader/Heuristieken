@@ -14,6 +14,8 @@ class TimeSlot(object):
         self.students = session.students
         self.day = ''
         self.hour = ''
+        self.schedule_room = []
+        self.schedule_students = []
 
     def randomDayHour(self):
         """
@@ -140,6 +142,8 @@ def main(student_list, course_list, session_list, room_list):
 
     import random
 
+    time_slot_list = []
+
     # creates schedule_room objects
     schedule_room_list = []
     for room in room_list:
@@ -151,7 +155,7 @@ def main(student_list, course_list, session_list, room_list):
     for student in student_list:
         schedule_student = ScheduleStudent(student.student_id)
         schedule_student_list.append(schedule_student)
-        
+
     # creates timeslot for every session and assigns it to day, hour and room
     for session in session_list:
         time_slot = TimeSlot(session)
@@ -160,6 +164,7 @@ def main(student_list, course_list, session_list, room_list):
         schedule_students_timeslot = []
         for student in time_slot.students:
             for schedule_student in schedule_student_list:
+                time_slot.schedule_students.append(schedule_student)
                 if student == schedule_student.student_id:
                      schedule_students_timeslot.append(schedule_student)
 
@@ -175,6 +180,8 @@ def main(student_list, course_list, session_list, room_list):
             if time_slot.isRoomEmpty(schedule_room):
                 #  fill schedule_room and schedule_student
                 time_slot.fillTimeSlot(schedule_room, schedule_students_timeslot)
+                time_slot.schedule_room.append(schedule_room)
+                time_slot_list.append(time_slot)
                 break
             # else assign random day and hour to time_slot and check again
             else:
@@ -182,4 +189,4 @@ def main(student_list, course_list, session_list, room_list):
                 schedule_room = random.choice(schedule_room_list)
 
 
-    return [schedule_room_list, schedule_student_list, course_list]
+    return [schedule_room_list, schedule_student_list, course_list, time_slot_list]

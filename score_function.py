@@ -1,20 +1,4 @@
-def main():
-    import schedule_maker
-    import preparation
-
-    # creates a list of student and course objects in preparation file
-    lists = preparation.main()
-    student_list = lists[0]
-    course_list = lists[1]
-    session_list = lists[2]
-    room_list = lists[3]
-
-    schedule = schedule_maker.main(student_list, course_list, session_list, room_list)
-
-    schedule_room_list = schedule[0]
-    schedule_student_list = schedule[1]
-    course_list = schedule[2]
-
+def main(schedule_room_list, schedule_student_list, course_list):
 
     score = 1000
 
