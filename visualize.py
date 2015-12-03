@@ -1,4 +1,4 @@
-import schedule_maker, sys, pygame
+import preparation, schedule_maker, sys, pygame
 
 def visualize(schedule):
     pygame.init()
@@ -72,8 +72,15 @@ def visualize(schedule):
 
         pygame.display.update()
 
+
+lists = preparation.main()
+student_list = lists[0]
+course_list = lists[1]
+session_list = lists[2]
+room_list = lists[3]
+
 # run main function in schedule_maker
-schedule = schedule_maker.main()
+schedule = schedule_maker.main(student_list, course_list, session_list, room_list)
 
 schedule_room_list = schedule[0]
 schedule_student_list = schedule[1]
@@ -89,5 +96,8 @@ for schedule_room in schedule_room_list:
     visualize(schedule_room)
 
 # visualize students schedules
-for schedule_student in schedule_student_list[99:100]:
+for schedule_student in schedule_student_list[151:152]:
+    visualize(schedule_student)
+
+for schedule_student in schedule_student_list[155:156]:
     visualize(schedule_student)
