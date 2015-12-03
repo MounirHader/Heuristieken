@@ -138,23 +138,21 @@ def main(student_list, course_list, session_list, room_list):
     Outputs: schedule_room object and schedule_student_list which is a list of objects
     '''
 
-    # creates one schedule_room object
+    import random
+
+    # creates schedule_room objects
     schedule_room_list = []
     for room in room_list:
         schedule_room = ScheduleRoom(room)
         schedule_room_list.append(schedule_room)
 
-    # creates the schedule_student objects
+    # creates schedule_student objects
     schedule_student_list = []
     for student in student_list:
         schedule_student = ScheduleStudent(student.student_id)
         schedule_student_list.append(schedule_student)
-
-    # creates timeslot object for every session
-    time_slot_list = []
-    print_list = []
-
-
+        
+    # creates timeslot for every session and assigns it to day, hour and room
     for session in session_list:
         time_slot = TimeSlot(session)
 
@@ -166,47 +164,22 @@ def main(student_list, course_list, session_list, room_list):
                      schedule_students_timeslot.append(schedule_student)
 
 
-        # assign random hour and day to time_slot
+        # assign random hour, day and room to time_slot
         time_slot.randomDayHour()
-
-        import random
         schedule_room = random.choice(schedule_room_list)
 
-
+        # executes until timeslot is filled to schedules
         while(True):
 
-            # check if room is filled at timeslot
-            room_empty = time_slot.isRoomEmpty(schedule_room)
-
-            # checks if student are filled at timeslot
-            for schedule_student in schedule_students_timeslot:
-                student_empty = time_slot.isStudentEmpty(schedule_student)
-
-                # if student_empty is false break out of for loop
-                if student_empty == False:
-                    break
-
-            # checks if room_empty and student_empty are both true
-            # if room_empty == True and student_empty == True:
-            if room_empty == True:
-                #  fill schedule_room and schedule_stude
+            # checks if room is empty
+            if time_slot.isRoomEmpty(schedule_room):
+                #  fill schedule_room and schedule_student
                 time_slot.fillTimeSlot(schedule_room, schedule_students_timeslot)
-                # break out of while loop
                 break
             # else assign random day and hour to time_slot and check again
             else:
                 time_slot.randomDayHour()
                 schedule_room = random.choice(schedule_room_list)
 
-
-        # appends time_slot to time_slot_list
-        time_slot_list.append(time_slot)
-
-        # test
-        test = [time_slot.course[:2],time_slot.day, time_slot.hour]
-        print_list.append(test)
-        # print print_list
-
-    # print schedule_room.giveList()
 
     return [schedule_room_list, schedule_student_list, course_list]
