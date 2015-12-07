@@ -21,7 +21,7 @@ def main():
     time_slot_list = schedule[3]
 
     score = score_function.main(schedule_room_list, schedule_student_list, course_list)
-    print "random score"
+    print "Random score"
     print score
 
     step = 0
@@ -29,7 +29,6 @@ def main():
     while(score < 1000):
         # only change score when new_score is higher
         tries = 0
-        new_score = -1000
 
         while (True):
             # select 2 random timeslots from random
@@ -42,7 +41,6 @@ def main():
 
             # calculates new score of incremental change
             new_score = score_function.main(schedule_room_list, schedule_student_list, course_list)
-            print new_score
 
             # when new score is better take the step
             if new_score > score:
@@ -50,15 +48,12 @@ def main():
                 break
             # when the score is not better switch back
             else:
-                switch(random_1, random_2, schedule_student_list, schedule_room_list)
-                print "switch back"
+                switch(random_2, random_1, schedule_student_list, schedule_room_list)
                 new_score = score_function.main(schedule_room_list, schedule_student_list, course_list)
-                print new_score
 
 
         step += 1
-        score = new_score
-        print "step: " + str(step) + "tries:" + str(tries)
+        print "Step: " + str(step) + " , after: " + str(tries) + " tries"
         print score
 
 
@@ -69,33 +64,6 @@ def switch(random_1, random_2, schedule_student_list, schedule_room_list):
     Switches two random timeslots in all relevant schedules
     """
 
-    # append all the schedules from students that follow random 1 and 2 in lists
-    schedule_students_1 = []
-    schedule_students_2 = []
-    for schedule_student in schedule_student_list:
-        for student in random_1.students:
-            if student == schedule_student.student_id:
-                schedule_students_1.append(schedule_student)
-        for student in random_2.students:
-            if student == schedule_student.student_id:
-                schedule_students_2.append(schedule_student)
-
-    # remove random_1 append random_2 from relevant student schedules
-    for schedule_student in schedule_students_1:
-        for time_slot in schedule_student.time_slots:
-            if time_slot.type == random_1.type and time_slot.course == random_1.course:
-                schedule_student.time_slots.remove(time_slot)
-                schedule_student.time_slots.append(random_2)
-                time_slot.class_room = random_2.class_room
-
-    # remove random_2 append random_1 relevant student schedules
-    for schedule_student in schedule_students_2:
-        for time_slot in schedule_student.time_slots:
-            if time_slot.type == random_2.type and time_slot.course == random_1.course:
-                schedule_student.time_slots.remove(time_slot)
-                schedule_student.time_slots.append(random_1)
-                time_slot.class_room = random_1.class_room
-
     # select the room schedule were random 1 and 2 are held
     for schedule_room in schedule_room_list:
         if schedule_room.class_room == random_1.class_room:
@@ -103,20 +71,30 @@ def switch(random_1, random_2, schedule_student_list, schedule_room_list):
         if schedule_room.class_room == random_2.class_room:
             schedule_room_2 = schedule_room
 
-
     # remove random_1 append random_2 in room schedule 1
     for time_slot in schedule_room_1.time_slots:
-        if time_slot.type == random_1.type and time_slot.course == random_1.course:
+        if time_slot.day == random_1.day and time_slot.hour == random_1.hour:
             schedule_room_1.time_slots.remove(time_slot)
             schedule_room_1.time_slots.append(random_2)
-            time_slot.class_room = random_2.class_room
 
     # remove random_2 append random_1 relevant student schedules
     for time_slot in schedule_room_2.time_slots:
-        if time_slot.type == random_2.type and time_slot.course == random_1.course:
+        if time_slot.day == random_2.day and time_slot.hour == random_2.hour:
             schedule_room_2.time_slots.remove(time_slot)
             schedule_room_2.time_slots.append(random_1)
-            time_slot.class_room = random_1.class_room
+
+    # switches day hour and room of random 1 and 2
+    day_bucket = random_1.day
+    hour_bucket = random_1.hour
+    room_bucket = random_1.class_room
+
+    random_1.day = random_2.day
+    random_1.hour = random_2.hour
+    random_1.class_room = random_2.class_room
+
+    random_2.day = day_bucket
+    random_2.hour = hour_bucket
+    random_2.class_room = room_bucket
 
 # run the function
 main()
