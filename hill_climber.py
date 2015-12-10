@@ -1,11 +1,11 @@
+import preparation
+import schedule_maker
+import random
+import score_function
+import visualize
+import csv
 
 def main():
-
-    import preparation
-    import schedule_maker
-    import random
-    import score_function
-
     # creates a list of student and course objects in preparation file
     lists = preparation.main()
     student_list = lists[0]
@@ -13,20 +13,63 @@ def main():
     session_list = lists[2]
     room_list = lists[3]
 
+    score_max = 0
+
+    # searches 10 times for a local maximum and visualizes the best score
+    for i in range(10):
+        print i
+        local_max_schedule = to_local_max(student_list, course_list, session_list, room_list)
+        schedule_room_list = local_max_schedule[0]
+        schedule_student_list = local_max_schedule[1]
+        score_local_max = score_function.main(schedule_room_list, schedule_student_list, course_list)
+
+        # when new hillclimber score is better
+        if score_local_max > score_max:
+            max_schedule = local_max_schedule
+            score_max = score_local_max
+
+    # writes data of best hillclimber to csv
+    data = max_schedule[2]
+    with open('data.csv', 'wb') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Step', 'Score', 'Tries'])
+        for row in data:
+            writer.writerow(row)
+
+    # visualizes best schedules
+    schedule_room_list = max_schedule[0]
+    schedule_student_list = max_schedule[1]
+    for schedule_room in schedule_room_list:
+        visualize.visualize(schedule_room)
+
+    # visualize students schedules
+    for schedule_student in schedule_student_list[151:152]:
+        visualize.visualize(schedule_student)
+
+    for schedule_student in schedule_student_list[155:156]:
+        visualize.visualize(schedule_student)
+
+
+
+
+def to_local_max(student_list, course_list, session_list, room_list):
+# """
+# Starts at random schedule and climbs to local maximum.
+# """
+
     #  creates schedule with schedules for room and students
     schedule = schedule_maker.main(student_list, course_list, session_list, room_list)
     schedule_room_list = schedule[0]
     schedule_student_list = schedule[1]
     course_list = schedule[2]
     time_slot_list = schedule[3]
-
     score = score_function.main(schedule_room_list, schedule_student_list, course_list)
-    print "Random score"
-    print score
-
     step = 0
 
-    while(score < 1000):
+    # were tries and scores per step are saved
+    data = []
+
+    while(True):
         # only change score when new_score is higher
         tries = 0
 
@@ -51,13 +94,18 @@ def main():
                 switch(random_2, random_1, schedule_student_list, schedule_room_list)
                 new_score = score_function.main(schedule_room_list, schedule_student_list, course_list)
 
+            # ends function if he tries more then 5000 steps
+            if tries > 5:
+                return [schedule_room_list, schedule_student_list, data]
 
         step += 1
-        print "Step: " + str(step) + " , after: " + str(tries) + " tries"
-        print score
 
-
-    print "we are in the thousands"
+        # saves the data for this step in data list
+        data_step = []
+        data_step.append(step)
+        data_step.append(score)
+        data_step.append(tries)
+        data.append(data_step)
 
 def switch(random_1, random_2, schedule_student_list, schedule_room_list):
     """
@@ -96,5 +144,4 @@ def switch(random_1, random_2, schedule_student_list, schedule_room_list):
     random_2.hour = hour_bucket
     random_2.class_room = room_bucket
 
-# run the function
 main()
