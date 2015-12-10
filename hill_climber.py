@@ -57,7 +57,7 @@ def main():
         print score
 
 
-    print "we are positive"
+    print "we are in the thousands"
 
 def switch(random_1, random_2, schedule_student_list, schedule_room_list):
     """
