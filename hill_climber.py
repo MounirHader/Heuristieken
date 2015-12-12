@@ -95,7 +95,7 @@ def to_local_max(student_list, course_list, session_list, room_list):
                 new_score = score_function.main(schedule_room_list, schedule_student_list, course_list)
 
             # ends function if he tries more then 5000 steps
-            if tries > 5:
+            if tries > 5000:
                 return [schedule_room_list, schedule_student_list, data]
 
         step += 1
