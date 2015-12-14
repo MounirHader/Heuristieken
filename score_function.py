@@ -1,6 +1,10 @@
 def main(schedule_room_list, schedule_student_list, course_list):
 
     score = 1000
+    malus_conflict = 0
+    malus_capacity = 0
+    malus_spread = 0
+    bonus_spread = 0
 
     # bonus and malus of course activities over week for student
     for schedule_student in schedule_student_list:
@@ -24,7 +28,8 @@ def main(schedule_room_list, schedule_student_list, course_list):
                 for time_slot in time_slot_student_course:
                     spread_activities.append(time_slot.day)
                     if spread_activities == [0, 3] or spread_activities == [1, 4] or spread_activities == [3, 0] or spread_activities == [4, 1]:
-                        score += 1
+                        score += (20.0 / 48.0)
+                        bonus_spread += (20.0 / 48.0)
                 # print "spread_activities:"
                 # print spread_activities
 
@@ -33,7 +38,8 @@ def main(schedule_room_list, schedule_student_list, course_list):
                 for time_slot in time_slot_student_course:
                     spread_activities.append(time_slot.day)
                     if spread_activities == [0, 2, 4] or spread_activities == [0, 4, 2] or spread_activities == [2, 0, 4] or spread_activities == [4, 0, 2] or spread_activities == [4, 2, 0] or spread_activities == [2, 4, 0]:
-                        score += 1
+                        score += (20.0 / 48.0)
+                        bonus_spread += (20.0 / 48.0)
                 # print "spread_activities:"
                 # print spread_activities
 
@@ -42,7 +48,8 @@ def main(schedule_room_list, schedule_student_list, course_list):
                 for time_slot in time_slot_student_course:
                     spread_activities.append(time_slot.day)
                     if spread_activities == [0, 1, 3, 4] or spread_activities == [0, 3, 1, 4] or spread_activities == [0, 1, 4, 3] or spread_activities == [0, 3, 4, 1] or spread_activities == [0, 4, 3, 1] or spread_activities == [0, 4, 1, 3] or spread_activities == [1, 0, 3, 4] or spread_activities == [1, 0, 4, 3] or spread_activities == [1, 3, 0, 4] or spread_activities == [1, 3, 4, 0] or spread_activities == [1, 4, 3, 0] or spread_activities == [1, 4, 0, 3] or spread_activities == [3, 0, 1, 4] or spread_activities == [3, 0, 4, 1] or spread_activities == [3, 1, 4, 0] or spread_activities == [3, 1, 0, 4] or spread_activities == [3, 4, 0, 1] or spread_activities == [3, 4, 1, 0] or spread_activities == [4, 0, 1, 3] or spread_activities == [4, 0, 3, 1] or spread_activities == [4, 1, 3, 0] or spread_activities == [4, 1, 0, 3] or spread_activities == [4, 3, 0, 1] or spread_activities == [4, 3, 1, 0]:
-                        score += 1
+                        score += (20.0 / 48.0)
+                        bonus_spread += (20.0 / 48.0)
                 # print "spread_activities:"
                 # print spread_activities
 
@@ -59,13 +66,16 @@ def main(schedule_room_list, schedule_student_list, course_list):
 
             # substract more score when there is less spread of activities
             if spread_days == (len(spread_activities) - 1):
-                score -= 0.5
+                score -= (10.0 / 48.0)
+                malus_spread -= (10.0 / 48.0)
                 # print "- 0.5"
             elif spread_days == len(spread_activities) - 2:
-                score -= 1
+                score -= (20.0 / 48.0)
+                malus_spread -= (20.0 / 48.0)
                 # print "- 1"
             elif spread_days == len(spread_activities) - 3:
-                score -= 1.5
+                score -= (30.0 / 48.0)
+                malus_spread -= (30.0 / 48.0)
                 # print "- 1.5"
 
         # subtract points for student schedule conflicts
@@ -74,6 +84,7 @@ def main(schedule_room_list, schedule_student_list, course_list):
             if (timeslot_list.count(timeslot) != 1):
                 conflict_aftrek = timeslot_list.count(timeslot) - 1
                 score -= conflict_aftrek
+                malus_conflict -= conflict_aftrek
 
     # subtract points for overcapacity in room
     for schedule_room in schedule_room_list:
@@ -82,5 +93,6 @@ def main(schedule_room_list, schedule_student_list, course_list):
             if len(time_slot.students) > capacity:
                 malus_room = len(time_slot.students) - capacity
                 score -= malus_room
+                malus_capacity -= malus_room
 
-    return score
+    return [score, malus_conflict, malus_capacity, malus_spread, bonus_spread]

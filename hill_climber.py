@@ -21,7 +21,8 @@ def main():
         local_max_schedule = to_local_max(student_list, course_list, session_list, room_list)
         schedule_room_list = local_max_schedule[0]
         schedule_student_list = local_max_schedule[1]
-        score_local_max = score_function.main(schedule_room_list, schedule_student_list, course_list)
+        score_list = score_function.main(schedule_room_list, schedule_student_list, course_list)
+        score_local_max = score_list[0]
 
         # when new hillclimber score is better
         if score_local_max > score_max:
@@ -32,7 +33,7 @@ def main():
     data = max_schedule[2]
     with open('data.csv', 'wb') as f:
         writer = csv.writer(f)
-        writer.writerow(['Step', 'Score', 'Tries'])
+        writer.writerow(['Iteration', 'Score', 'malus_conflict', 'malus_capacity', 'malus_spread', 'bonus_spread'])
         for row in data:
             writer.writerow(row)
 
@@ -63,49 +64,63 @@ def to_local_max(student_list, course_list, session_list, room_list):
     schedule_student_list = schedule[1]
     course_list = schedule[2]
     time_slot_list = schedule[3]
-    score = score_function.main(schedule_room_list, schedule_student_list, course_list)
-    step = 0
+    new_score_list = score_function.main(schedule_room_list, schedule_student_list, course_list)
+    score = new_score_list[0]
+    malus_conflict = new_score_list[1]
+    malus_capacity = new_score_list[2]
+    malus_spread = new_score_list[3]
+    bonus_spread = new_score_list[4]
 
-    # were tries and scores per step are saved
+    # where score per iteration is saved
     data = []
+    iteration = 0
 
     while(True):
         # only change score when new_score is higher
         tries = 0
 
         while (True):
+
+            # saves the data for this iteration in data list
+            data_iteration = []
+            data_iteration.append(iteration)
+            data_iteration.append(score)
+            data_iteration.append(malus_conflict)
+            data_iteration.append(malus_capacity)
+            data_iteration.append(malus_spread)
+            data_iteration.append(bonus_spread)
+            data.append(data_iteration)
+
             # select 2 random timeslots from random
             random_1 = random.choice(time_slot_list)
             random_2 = random.choice(time_slot_list)
             tries += 1
+            iteration += 1
 
             # Switches two random timeslots in all relevant schedules
             switch(random_1, random_2, schedule_student_list, schedule_room_list)
 
             # calculates new score of incremental change
-            new_score = score_function.main(schedule_room_list, schedule_student_list, course_list)
+            new_score_list = score_function.main(schedule_room_list, schedule_student_list, course_list)
+            new_score = new_score_list[0]
 
             # when new score is better take the step
             if new_score > score:
                 score = new_score
+                malus_conflict = new_score_list[1]
+                malus_capacity = new_score_list[2]
+                malus_spread = new_score_list[3]
+                bonus_spread = new_score_list[4]
+
                 break
             # when the score is not better switch back
             else:
                 switch(random_2, random_1, schedule_student_list, schedule_room_list)
-                new_score = score_function.main(schedule_room_list, schedule_student_list, course_list)
 
             # ends function if he tries more then 5000 steps
             if tries > 10000:
                 return [schedule_room_list, schedule_student_list, data]
 
-        step += 1
-
-        # saves the data for this step in data list
-        data_step = []
-        data_step.append(step)
-        data_step.append(score)
-        data_step.append(tries)
-        data.append(data_step)
 
 def switch(random_1, random_2, schedule_student_list, schedule_room_list):
     """

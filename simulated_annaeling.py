@@ -2,7 +2,7 @@ import preparation
 import schedule_maker
 import random
 import score_function
-# import visualize
+import visualize
 import csv
 import math
 
@@ -14,31 +14,43 @@ def main():
     session_list = lists[2]
     room_list = lists[3]
 
-    # executes simulated annealing
-    schedule = simulated_annealing(student_list, course_list, session_list, room_list)
-    schedule_room_list = schedule[0]
-    schedule_student_list = schedule[1]
-    data = schedule[2]
+    score_max = 0
 
+    # searches 5 times for a local maximum and visualizes the best score
+    for i in range(5):
+        print i
+        # executes simulated annealing
+        local_max_schedule = simulated_annealing(student_list, course_list, session_list, room_list)
+        schedule_room_list = local_max_schedule[0]
+        schedule_student_list = local_max_schedule[1]
+        score_list = score_function.main(schedule_room_list, schedule_student_list, course_list)
+        score_local_max = score_list[0]
+
+        # when new hillclimber score is better
+        if score_local_max > score_max:
+            max_schedule = local_max_schedule
+            score_max = score_local_max
+
+    data = max_schedule[2]
     # writes data of schedule  to csv
     with open('data_simulated_annealing.csv', 'wb') as f:
         writer = csv.writer(f)
-        writer.writerow(['Step', 'Score', 'Tries'])
+        writer.writerow(['Iteration', 'Score', 'malus_conflict', 'malus_capacity', 'malus_spread', 'bonus_spread'])
         for row in data:
             writer.writerow(row)
 
-    # # visualizes room schedules
-    # schedule_room_list = max_schedule[0]
-    # schedule_student_list = max_schedule[1]
-    # for schedule_room in schedule_room_list:
-    #     visualize.visualize(schedule_room)
-    #
-    # # visualize students schedules
-    # for schedule_student in schedule_student_list[151:152]:
-    #     visualize.visualize(schedule_student)
-    #
-    # for schedule_student in schedule_student_list[155:156]:
-    #     visualize.visualize(schedule_student)
+    # visualizes room schedules
+    schedule_room_list = max_schedule[0]
+    schedule_student_list = max_schedule[1]
+    for schedule_room in schedule_room_list:
+        visualize.visualize(schedule_room)
+
+    # visualize students schedules
+    for schedule_student in schedule_student_list[151:152]:
+        visualize.visualize(schedule_student)
+
+    for schedule_student in schedule_student_list[155:156]:
+        visualize.visualize(schedule_student)
 
 
 def simulated_annealing(student_list, course_list, session_list, room_list):
@@ -54,64 +66,97 @@ def simulated_annealing(student_list, course_list, session_list, room_list):
     schedule_student_list = schedule[1]
     course_list = schedule[2]
     time_slot_list = schedule[3]
-    score = score_function.main(schedule_room_list, schedule_student_list, course_list)
-    step = 0
+    new_score_list = score_function.main(schedule_room_list, schedule_student_list, course_list)
+    score = new_score_list[0]
+    malus_conflict = new_score_list[1]
+    malus_capacity = new_score_list[2]
+    malus_spread = new_score_list[3]
+    bonus_spread = new_score_list[4]
+
+    # sets simulated annaeling to True
+    sim = True
 
     # initiates temperature (certain acceptance prob of 0.8)
-    temperature = 10
+    temperature = 1000
 
     # initiates cooling_rate
-    cooling_rate = 0.001
+    cooling_rate = 0.0001
 
     # were tries and scores per step are saved
     data = []
+    iteration = 0
 
     while(True):
         # only change score when new_score is higher
         tries = 0
 
         while (True):
+
+            # saves the data for this iteration in data list
+            data_iteration = []
+            data_iteration.append(iteration)
+            data_iteration.append(score)
+            data.append(data_iteration)
+            data_iteration.append(malus_conflict)
+            data_iteration.append(malus_capacity)
+            data_iteration.append(malus_spread)
+            data_iteration.append(bonus_spread)
+            data.append(data_iteration)
+
             # select 2 random timeslots from random
             random_1 = random.choice(time_slot_list)
             random_2 = random.choice(time_slot_list)
             tries += 1
-
-            # cools the temperature
-            temperature *= 1 - cooling_rate
+            iteration += 1
 
             # Switches two random timeslots in all relevant schedules
             switch(random_1, random_2, schedule_student_list, schedule_room_list)
 
             # calculates new score of incremental change
-            new_score = score_function.main(schedule_room_list, schedule_student_list, course_list)
+            new_score_list = score_function.main(schedule_room_list, schedule_student_list, course_list)
+            new_score = new_score_list[0]
 
             # calculates probability of acceptance
             prob = acceptance_probability(score, new_score, temperature)
 
-            # when probability of acceptance is higher then random number between 0 and 1 take a step
-            if prob > random.random():
-                score = new_score
-                break
-            # when the score is not better switch back
+            # if simulated annaeling is on
+            if sim:
+                # cools the temperature
+                temperature *= 1 - cooling_rate
+                # when probability of acceptance is higher then random number between 0 and 1 take a step
+                if prob > random.random():
+                    score = new_score
+                    malus_conflict = new_score_list[1]
+                    malus_capacity = new_score_list[2]
+                    malus_spread = new_score_list[3]
+                    bonus_spread = new_score_list[4]
+                    break
+                # when the score is not better switch back
+                else:
+                    switch(random_2, random_1, schedule_student_list, schedule_room_list)
+
+            # when simulated annaeling is over start hillclimber
             else:
-                switch(random_2, random_1, schedule_student_list, schedule_room_list)
-                new_score = score_function.main(schedule_room_list, schedule_student_list, course_list)
+                # when new score is better take the step
+                if new_score > score:
+                    score = new_score
+                    break
+                # when the score is not better switch back
+                else:
+                    switch(random_2, random_1, schedule_student_list, schedule_room_list)
+                    new_score = score_function.main(schedule_room_list, schedule_student_list, course_list)
+
+                # ends function if he tries more then 5000 steps
+                if tries > 10000:
+                    return [schedule_room_list, schedule_student_list, data]
 
             # ends function if temperature is below 1
             if temperature < 1:
-                return [schedule_room_list, schedule_student_list, data]
+                sim = False
+
+        # print "Iteration: " + str(iteration) + " Score: " + str(score) + " Tries: " + str(tries) + " Temp: " + str(temperature)
 
 
-        step += 1
-
-        print "Step: " + str(step) + " Score: " + str(score) + " Tries: " + str(tries) + " Temp: " + str(temperature)
-
-        # saves the data for this step in data list
-        data_step = []
-        data_step.append(step)
-        data_step.append(score)
-        data_step.append(tries)
-        data.append(data_step)
 
 def switch(random_1, random_2, schedule_student_list, schedule_room_list):
     """
