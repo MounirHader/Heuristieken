@@ -96,7 +96,7 @@ def simulated_annealing(student_list, course_list, session_list, room_list):
             data_iteration = []
             data_iteration.append(iteration)
             data_iteration.append(score)
-            data.append(data_iteration)
+            # data.append(data_iteration)
             data_iteration.append(malus_conflict)
             data_iteration.append(malus_capacity)
             data_iteration.append(malus_spread)
